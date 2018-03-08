@@ -15,3 +15,5 @@ https://creativecommons.org/licenses/by-nc/3.0/
 Basically free for non-commercial use only.  
 If you wish to buy a license, please visit my website.  
   
+Download the ZIP file, uncompress it, rename the folder NMC.  
+Follow instructions on website.  
