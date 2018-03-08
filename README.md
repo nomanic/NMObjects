@@ -20,5 +20,5 @@ Download following scripts -
 draggabilly.min.js - https://draggabilly.desandro.com/
 packery.pkgd.min.js - https://packery.metafizzy.co/
 moment.min.js - https://momentjs.com/
-and insert into NMC/core/vendor/
+and insert them into NMC/core/vendor/
 Then follow instructions on website.  
