@@ -5,12 +5,9 @@
  * Version: 4.75
  * Author: Neil Oman
  * Author URI: http://www.nomanic.biz/
- * License: Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)
+ * License: Envato Split License with GPL (see text file)
  *
  * Copyright 2018  Nomanic  (email : nomanic99@gmail.com)
- *
- * Read more about it here-
- * https://creativecommons.org/licenses/by-nc/3.0/
  *
  * Basically free for non-commercial use only.
  * If you wish to buy a license, please visit my website.
