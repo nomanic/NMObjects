@@ -5,12 +5,9 @@
  * Version: 4.75
  * Author: Neil Oman
  * Author URI: http://www.nomanic.biz/
- * License: Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)
+ * License: Envato Split License with GPL (see text file)
  *
  * Copyright 2018  Nomanic  (email : nomanic99@gmail.com)
- *
- * Read more about it here-
- * https://creativecommons.org/licenses/by-nc/3.0/
  *
  * Basically free for non-commercial use only.
  * If you wish to buy a license, please visit my website.
@@ -1629,18 +1626,23 @@ var NomanicObject = {
             dv = a ? a[2] : g,
             prt = a ? a[3] : g,
             dprt = a ? a[4] : g,
-            mrt = (dprt ? dprt : prt),
+            mrt = (prt ? prt : dprt),odprt,ld,
             snip, csnip = NomanicObject.getsnip(2);
         if (o1 && (dprt || prt)) {
             csnip = NomanicObject.getsnip(1);
             mrt.setAttribute('snip', csnip);
+            odprt=dprt;
+            ld=1;
         }
         dprt = dprt ? (dprt.hasAttribute('snippet') ? NomanicObject.baseName(dprt.getAttribute('snippet')) : false) : false;
+        dprt = dprt ? dprt : (prt ? (prt.hasAttribute('snippet') ? NomanicObject.baseName(prt.getAttribute('snippet')) : false) : false);
         dprt = dprt ? dprt : (prt ? (prt.hasAttribute('package') ? NomanicObject.baseName(prt.getAttribute('package')) : false) : false);
+        if (ld) {
+            NomanicObject.qtodoq([0, 0, 0, mrt, dprt, snipargs, 0, 0, 0, 0, mrt]);
+        }
         var options, v = ((o = NomanicObject.ob(o1)) ? o1 : document).getElementsByClassName('NomanicObject_lightbox'),
             b = (o && (NomanicObject.hasClass(o, 'NomanicObject') || NomanicObject.hasClass(o, 'NomanicObject_lightbox') || NomanicObject.hasClass(o, 'NomanicObject_snippet'))) ? [o] : ((o ? o : document).getElementsByClassName('NomanicObject')),
-            b, j, p, c, f, r;
-        var snippet = prt ? 1 : 0;
+            b, j, p, c, f, r,snippet = prt ? 1 : 0;
         if (o1) {
             snip = csnip;
         }
