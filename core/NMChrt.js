@@ -18,7 +18,7 @@ var NomanicGraph = {
     prop: 0.95,
     ref: 'child',
     //draw caps on lines, circles
-    drawcaps: function(NMC, extra, cap, pts, r, lnw, fl) {
+    drawcaps: function(NMC, polar, extra, cap, pts, r, lnw, fl) {
         NMC.ctx.save();
         var i, x, y, v = NMC.layout.vertical,
             ir = Math.floor(((5 / 766) * NMC.objects.canvas.offsetHeight) * 2),
@@ -34,7 +34,7 @@ var NomanicGraph = {
         for (i = 0; i < pts.length; i += 2) {
             x = (v ? pts[i + 1] : (pts[i] + extra));
             y = (v ? (pts[i] + extra) : pts[i + 1]);
-            if ((i == pts.length - 2) && (!extra)) {
+            if ((i == pts.length - 2) && (!extra) && (!polar)) {
                 if (v) {
                     y = NMC.objects.panel.offsetHeight;
                 } else {
@@ -371,9 +371,9 @@ var NomanicGraph = {
                         }
                         NMC.ctx.stroke();
                         NMC.ctx.closePath();
-                        NomanicGraph.drawcaps(NMC, ex, dat[r].cap, pnts, ak + r, ex);
+                        NomanicGraph.drawcaps(NMC,1, ex, dat[r].cap, pnts, ak + r, ex);
                         if (dat[r].cap > 3) {
-                            NomanicGraph.drawcaps(NMC, ex, dat[r].cap + 2, pnts, ak + r, ex);
+                            NomanicGraph.drawcaps(NMC,1, ex, dat[r].cap + 2, pnts, ak + r, ex);
                         }
                     }
                 } else {
@@ -399,9 +399,9 @@ var NomanicGraph = {
                             NMC.ctx.stroke();
                             NMC.ctx.closePath();
                         }
-                        NomanicGraph.drawcaps(NMC, ex, dat[r].cap, pnts, ak + r, ex);
+                        NomanicGraph.drawcaps(NMC,1, ex, dat[r].cap, pnts, ak + r, ex);
                         if (dat[r].cap > 3) {
-                            NomanicGraph.drawcaps(NMC, ex, dat[r].cap + 2, pnts, ak + r, ex);
+                            NomanicGraph.drawcaps(NMC,1, ex, dat[r].cap + 2, pnts, ak + r, ex);
                         }
                     } else {
                         NMC.ctx.beginPath();
@@ -1641,9 +1641,9 @@ var NomanicGraph = {
                                 NMC.ctx.stroke();
                                 NMC.ctx.closePath();
                             }
-                            NomanicGraph.drawcaps(NMC, (extr ? NMC.wbw / 2 : 0), dat[r].cap, pnts, ak + r, (j + 1) * 3 - 2, fill);
+                            NomanicGraph.drawcaps(NMC,0, (extr ? NMC.wbw / 2 : 0), dat[r].cap, pnts, ak + r, (j + 1) * 3 - 2, fill);
                             if (dat[r].cap > 3) {
-                                NomanicGraph.drawcaps(NMC, (extr ? NMC.wbw / 2 : 0), dat[r].cap + 2, pnts, ak + r, (j + 1) * 3 - 2, fill);
+                                NomanicGraph.drawcaps(NMC,0, (extr ? NMC.wbw / 2 : 0), dat[r].cap + 2, pnts, ak + r, (j + 1) * 3 - 2, fill);
                             }
                         }
                     } else {
@@ -1719,9 +1719,9 @@ var NomanicGraph = {
                             NMC.ctx.stroke();
                             NMC.ctx.closePath();
                         }
-                        NomanicGraph.drawcaps(NMC, extr, dat[r].cap, pnts, ak + r);
+                        NomanicGraph.drawcaps(NMC,0, extr, dat[r].cap, pnts, ak + r);
                         if (dat[r].cap > 3) {
-                            NomanicGraph.drawcaps(NMC, extr, dat[r].cap + 2, pnts, ak + r);
+                            NomanicGraph.drawcaps(NMC,0, extr, dat[r].cap + 2, pnts, ak + r);
                         }
                     } else {
                         if (dat[r].outline) {
