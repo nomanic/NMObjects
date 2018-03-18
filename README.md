@@ -20,3 +20,5 @@ packery.pkgd.min.js - https://packery.metafizzy.co/
 moment.min.js - https://momentjs.com/
 and insert them into NMC/core/vendor/
 Then follow instructions on website.  
+
+The wordpress plugin NMC_WP.zip is just the NMC folder zipped.
