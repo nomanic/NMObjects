@@ -1,0 +1,333 @@
+           <div>
+<div id="dashid"></div>
+           <div class="NMC_Chart NomanicObject"  
+                NMC="
+                {plot:
+                    [ref|'main']
+                    [type|bar]
+                    [size|[768,1300]]
+                    [title|'Departmental Revenue 2017']
+                    [subtitle|'Finance Department Official Figures ($Millions)']
+                    [border|16]
+                    [showaxis]
+                    [showgrid]
+                    [grid|2]
+                    [gridspan|[1,2]]
+                    [fixed|20]
+                    [stacked]
+                    [intro|[2,1500]]
+                    [showmenu]
+                    [timestart|1483263912]
+                    [timeunit|'M']
+                    [timestep|1]
+                    [menuformat|'{M} {Y}']
+                    [highlight|#DD4250]
+                    [gridmode|2]
+                    [color|#25B8EA]
+                    [opacityspread]
+                    [neon]
+                    [outline]
+                    [marker]
+                }
+                {frame:
+                    [type|5]
+                    [ink|#25B8EA]
+                }
+                {background:
+                    [color|#454545]
+                    [ink|#25B8EA]
+                }
+                {chart:
+                    [grid|#25B8EA]
+                }
+                " 
+                data="
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Accounts']}
+                    {[series|3.2, 2.9, 4, 1, 2.5, 2.3, 7, 9, 3, 10, 2, 5][label|'Finance']}
+                    {[series|5.6, 2, 3, 6, 1, 4, 9, 4, 6, 7, 3, 1][label|'Logistics']}
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Sales']}
+                    {[series|3.2, 2.9, 4, 1, 2.5, 2.3, 7, 9, 3, 10, 2, 5][label|'Purchasing']}
+                    {[series|5.6, 2, 3, 6, 1, 4, 9, 4, 6, 7, 3, 1][label|'Trading']}
+                " 
+                lines="
+                    {[label|'Average'][neon]][average][color|#F7CC30][spline]}
+                ">
+            </div>
+</div>
+<div>
+           <div class="NMC_Chart NomanicObject"  
+                NMC="
+                {plot:
+                    [ref|'pie']
+                    [type|pie]
+                    [title|'March 2017']
+                    [size|[768,540]]
+                    [showlegend|0.3]
+                    [fullscreen]
+                    [gridmode|2]
+                    [intro|[2,1500]]
+                    [seperate|1]
+                    [donut|[0.45,0.75]]
+                    [3d2|0.2]
+                    [color|#25B8EA]
+                    [opacityspread]
+                    [outline]
+                    [neon]
+                }
+                {frame:
+                    [type|5]
+                    [ink|#25B8EA]
+                }
+                {background:
+                    [color|#454545]
+                    [ink|#25B8EA]
+                }
+                " 
+                data="
+                    {[series|1.5][label|'Accounts']}
+                    {[series|3.2][label|'Finance']}
+                    {[series|5.6][label|'Logistics']}
+                    {[series|1.5][label|'Sales']}
+                    {[series|3.2][label|'Purchasing']}
+                    {[series|5.6][label|'Trading']}
+                ">
+            </div>  
+</div>
+<div>
+           <div class="NMC_Chart NomanicObject"  
+                NMC="
+                {plot:
+                    [ref|'sector']
+                    [type|polar]
+                    [size|[768,540]]
+                    [title|'Sector Impact']
+                    [subtitle|'Finance Department Official Figures ($Millions)']
+                    [border|16]
+                    [showgrid]
+                    [showlegend]
+                    [legend|3]
+                    [grid|2]
+                    [intro|[2,1500]]
+                    [fixed|12]
+                    [stacked]
+                    [gridmode|2]
+                    [marker]
+                    [scalar|0.8]
+                    [color|#25B8EA]
+                    [highlight|#DD4250]
+                    [opacityspread]
+                    [outline]
+                    [neon]
+                }
+                {frame:
+                    [type|5]
+                    [ink|#25B8EA]
+                }
+                {background:
+                    [color|#454545]
+                    [ink|#25B8EA]
+                }
+                 {chart:
+                    [grid|#25B8EA]
+                }
+                " 
+                data="
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Trade']}
+                    {[series|3.2, 2.9, 4, 1, 2.5, 2.3, 7, 9, 3, 10, 2, 5][label|'Finance']}
+                    {[series|5.6, 2, 3, 6, 1, 4, 9, 4, 6, 7, 3, 1][label|'Logistics']}
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Consumer']}
+                " 
+                lines="
+                    {[label|'Average'][average][color|#F7CC30][spline][neon]}
+                ">
+            </div>
+</div>
+<div>
+           <div class="NMC_Chart NomanicObject"  
+                NMC="
+                {plot:
+                    [ref|'budget']
+                    [type|line]
+                    [size|[1526,540]]
+                    [title|'Proposed vs Projected vs Actual Revenue 2017']
+                    [subtitle|'As Recorded by Finance Department']
+                    [border|16]
+                    [showaxis]
+                    [showgrid]
+                    [grid|2]
+                    [gridspan|[2,1]]
+                    [fixed|20]
+                    [intro|[2,1500]]
+                    [showlegend]
+                    [legend|3]
+                    [marker]
+                    [yorigin]
+                    [showmenu]                    
+                    [timestart|1483263912]
+                    [timeunit|'M']
+                    [timestep|1]
+                    [menuformat|'{M} {Y}']
+                    [gridmode|2]
+                    [color|#25B8EA]
+                    [opacityspread]
+                    [neon]
+                }
+                {frame:
+                    [type|5]
+                    [ink|#25B8EA]
+                }
+                {background:
+                    [color|#454545]
+                    [ink|#25B8EA]
+                }
+                 {chart:
+                    [grid|#25B8EA]
+                }
+               " 
+                data="
+                    {[series|3.2, 2.9, 4, 1, 2.5, 2.3, 7, 9, 3, 10, 2, 5][label|'Proposed'][dashed][cap][spline][neon]}
+                    {[series|5.6, 2, 3, 6, 1, 4, 9, 4, 6, 7, 3, 1][label|'Projected'][spline][cap][neon]}
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Actual'][cap][neon]}
+                ">
+            </div>
+</div>
+<div>
+           <div class="NMC_Chart NomanicObject"  
+                NMC="
+                {plot:
+                    [ref|'pie1']
+                    [type|pie]
+                    [title|'March 2017']
+                    [size|[768,540]]
+                    [showlegend|0.3]
+                    [fullscreen]
+                    [gridmode|2]
+                    [intro|[2,1500]]
+                    [seperate|1]
+                    [donut|[0.45,0.75]]
+                    [3d2|0.2]
+                    [color|#25B8EA]
+                    [opacityspread]
+                    [outline]
+                    [neon]
+                }
+                {frame:
+                    [type|5]
+                    [ink|#25B8EA]
+                }
+                {background:
+                    [color|#454545]
+                    [ink|#25B8EA]
+                }
+                " 
+                data="
+                    {[series|1.5][label|'Accounts']}
+                    {[series|3.2][label|'Finance']}
+                    {[series|5.6][label|'Logistics']}
+                    {[series|1.5][label|'Sales']}
+                    {[series|3.2][label|'Purchasing']}
+                    {[series|5.6][label|'Trading']}
+                ">
+            </div>  
+</div>
+<div>
+           <div class="NMC_Chart NomanicObject"  
+                NMC="
+                {plot:
+                    [ref|'budget1']
+                    [type|line]
+                    [size|[768,540]]
+                    [title|'Proposed vs Projected vs Actual Revenue 2017']
+                    [subtitle|'As Recorded by Finance Department']
+                    [border|16]
+                    [showaxis]
+                    [showgrid]
+                    [grid|2]
+                    [fixed|20]
+                    [showlegend]
+                    [intro|[2,1500]]
+                    [legend|3]
+                    [marker]
+                    [yorigin]
+                    [showmenu]                    
+                    [timestart|1483263912]
+                    [timeunit|'M']
+                    [timestep|1]
+                    [menuformat|'{M} {Y}']
+                    [gridmode|2]
+                    [color|#25B8EA]
+                    [opacityspread]
+                    [neon]
+                }
+                {frame:
+                    [type|5]
+                    [ink|#25B8EA]
+                }
+                {background:
+                    [color|#454545]
+                    [ink|#25B8EA]
+                }
+                 {chart:
+                    [grid|#25B8EA]
+                }
+               " 
+                data="
+                    {[series|3.2, 2.9, 4, 1, 2.5, 2.3, 7, 9, 3, 10, 2, 5][label|'Proposed'][dashed][cap][spline][neon]}
+                    {[series|5.6, 2, 3, 6, 1, 4, 9, 4, 6, 7, 3, 1][label|'Projected'][spline][cap][neon]}
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Actual'][cap][neon]}
+                ">
+            </div>
+</div>
+<div>
+           <div class="NMC_Chart NomanicObject"  
+                NMC="
+                {plot:
+                    [ref|'sector1']
+                    [type|polar]
+                    [size|[768,540]]
+                    [title|'Sector Impact']
+                    [subtitle|'Finance Department Official Figures ($Millions)']
+                    [border|16]
+                    [showgrid]
+                    [showlegend]
+                    [legend|3]
+                    [grid|2]
+                    [intro|[2,1500]]
+                    [fixed|12]
+                    [stacked]
+                    [gridmode|2]
+                    [marker]
+                    [scalar|0.8]
+                    [color|#25B8EA]
+                    [highlight|#DD4250]
+                    [opacityspread]
+                    [outline]
+                    [neon]
+                }
+                {frame:
+                    [type|5]
+                    [ink|#25B8EA]
+                }
+                {background:
+                    [color|#454545]
+                    [ink|#25B8EA]
+                }
+                 {chart:
+                    [grid|#25B8EA]
+                }
+                " 
+                data="
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Trade']}
+                    {[series|3.2, 2.9, 4, 1, 2.5, 2.3, 7, 9, 3, 10, 2, 5][label|'Finance']}
+                    {[series|5.6, 2, 3, 6, 1, 4, 9, 4, 6, 7, 3, 1][label|'Logistics']}
+                    {[series|1.5, 0.4, 2, 5, 3, 4.6, 1, 2, 4, 2, 11, 12][label|'Consumer']}
+                " 
+                lines="
+                    {[label|'Average'][average][color|#F7CC30][spline][neon]}
+                ">
+            </div>
+</div>
+<div class="NomanicObject_scripts"
+    scripts="dash.js">
+</div>
+
