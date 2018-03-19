@@ -22,3 +22,5 @@ and insert them into NMC/core/vendor/
 Then follow instructions on website.  
 
 The wordpress plugin NMC_WP.zip is just the NMC folder zipped.
+So I have removed it, if you need the plugin, just zip the NMC folder.
+Upload to your WP dashboard, and activate it.
