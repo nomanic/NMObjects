@@ -1358,7 +1358,7 @@ var NomanicGraph = {
                     NMC.ctx.shadowBlur = h4 + h4;
                     NMC.ctx.shadowColor = "black";
                 }
-                if (NMC.plot.data[f].cap&&(NMC.plot.data[f].cap==1)) {
+                if (NMC.plot.data[f].cap) {
                     NMC.ctx.beginPath();
                     NMC.ctx.lineWidth = lw;
                     NMC.ctx.strokeStyle = fill;
