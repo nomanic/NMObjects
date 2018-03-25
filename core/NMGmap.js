@@ -17,7 +17,6 @@
 var NomanicGmap = {
     prop: 0.95,
     ref: 'child',
-    API_KEY:'AIzaSyCkhQLsq5jbdotaLgyh-ahnL2velhfbzMk',
     NMCdrawPie: function(NMC, n, brd) {
         var j, lr = 0,
             data = NMC.plot.data;
@@ -234,7 +233,7 @@ var NomanicGmap = {
         NomanicGmap.mback=new Image();
         NomanicGmap.mback.src='data:image/png;base64,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';
         NomanicObject.register('NomanicGmap.create', ['gmap']);
-        NomanicObject.addscript([['https://maps.googleapis.com/maps/api/js?key='+NomanicGmap.API_KEY+'&libraries=places', 0]]);
+        NomanicObject.addscript([['https://maps.googleapis.com/maps/api/js?key='+NomanicKeys.Google_Maps+'&libraries=places', 0]]);
         NomanicObject.addtype(NomanicGmap);
     },
     parsebase: function(options, p, dv) {
@@ -253,7 +252,7 @@ var NomanicGmap = {
                     options.layout.showzoom = 1;
                     break;
                 case 'showbuttons':
-                    options.layout.showbuttons = k[1]%4;
+                    options.layout.showbuttons = k[1]%5;
                     break;
                 case 'select':
                     options.layout.select = parseInt(k[1]);
@@ -551,7 +550,9 @@ var NomanicGmap = {
                 if (NMC.vis1==1) {
                     NMC.directionsDisplay.setMap(null);
                     o=NomanicObject.ob('b98' + NMC.pid).children[1];
-                    o.children[2].style.opacity=0;
+                    if (NMC.layout.showbuttons>3) {
+                        o.children[3].style.opacity=0;
+                    }
                     NMC.vis1=0;
                 }
                 NomanicGmap.fitToMarkers(this.NMC,this.f);
@@ -560,12 +561,15 @@ var NomanicGmap = {
         NomanicGmap.fitToMarkers(NMC);
         o=NomanicObject.ob('b98' + NMC.pid).children[1];
         if (NMC.layout.showbuttons>0) {
-           ln+='<img class="gbut Gooey_object" src="'+NomanicObject.urlpath+'ims/gmaphome.png" style="float:left;margin-left:6px;margin-top:6px;cursor:pointer;"/>';
+           ln+='<img class="gbut Gooey_object" src="'+NomanicObject.urlpath+'ims/gmapzoom.png" style="float:left;margin-left:6px;margin-top:6px;cursor:pointer;"/>';
         }
         if (NMC.layout.showbuttons>1) {
-           ln+='<img class="gbut Gooey_object" src="'+NomanicObject.urlpath+'ims/gmapcar.png" style="float:left;margin-left:3px;margin-top:6px;cursor:pointer;"/>';
+           ln+='<img class="gbut Gooey_object" src="'+NomanicObject.urlpath+'ims/gmaphome.png" style="float:left;margin-left:6px;margin-top:6px;cursor:pointer;"/>';
         }
         if (NMC.layout.showbuttons>2) {
+           ln+='<img class="gbut Gooey_object" src="'+NomanicObject.urlpath+'ims/gmapcar.png" style="float:left;margin-left:3px;margin-top:6px;cursor:pointer;"/>';
+        }
+        if (NMC.layout.showbuttons>3) {
            ln+='<img class="gbut Gooey_object" src="'+NomanicObject.urlpath+'ims/gmaproute.png" style="opacity:0;float:left;margin-left:3px;margin-top:6px;cursor:pointer;"/>';
         }
         o.innerHTML=ln;
@@ -573,6 +577,13 @@ var NomanicGmap = {
         if (NMC.layout.showbuttons>0) {
            b[0].NMC=NMC;
            b[0].addEventListener("click", function(){
+                var o,NMC=this.NMC;
+                NomanicGmap.fitToMarkers(NMC);
+           });
+        }
+        if (NMC.layout.showbuttons>1) {
+           b[1].NMC=NMC;
+           b[1].addEventListener("click", function(){
                 var o,NMC=this.NMC;
                 if (!NMC.homem) {return;}
                 NMC.vis=1-NMC.vis;
@@ -582,15 +593,19 @@ var NomanicGmap = {
                 if (NMC.vis===0) {
                     NMC.directionsDisplay.setMap(null);
                     NMC.vis1=0;
+                    if (NMC.layout.showbuttons>3) {
+                        o.children[3].style.opacity=NMC.vis;
+                    }
+                }
+                if (NMC.layout.showbuttons>2) {
                     o.children[2].style.opacity=NMC.vis;
                 }
-                o.children[1].style.opacity=NMC.vis;
                 NomanicGmap.fitToMarkers(NMC);
            });
         }
-        if (NMC.layout.showbuttons>1) {
-           b[1].NMC=NMC;
-           b[1].addEventListener("click", function(){
+        if (NMC.layout.showbuttons>2) {
+           b[2].NMC=NMC;
+           b[2].addEventListener("click", function(){
                 var o,NMC=this.NMC;
                 if (NMC.vis1===0) {
                     NomanicGmap.displayRoute(NMC);
@@ -598,15 +613,17 @@ var NomanicGmap = {
                 else {
                     NMC.directionsDisplay.setMap(null);
                     o=NomanicObject.ob('b98' + NMC.pid).children[1];
-                    o.children[2].style.opacity=0;
+                    if (NMC.layout.showbuttons>3) {
+                        o.children[3].style.opacity=0;
+                    }
                     NMC.vis1=0;
                 }
                 NomanicObject.objs[NMC.id]=NMC;
            });
         }
-        if (NMC.layout.showbuttons>2) {
-           b[2].NMC=NMC;
-           b[2].addEventListener("click", function(){
+        if (NMC.layout.showbuttons>3) {
+           b[3].NMC=NMC;
+           b[3].addEventListener("click", function(){
                 var w=NomanicObject.ob("Gmap_0001"),self=this.NMC,sz = NomanicObject.vsz(),e=[];
                 e[0]=sz[0]/2;
                 e[1]=sz[1]/2;
@@ -617,11 +634,13 @@ var NomanicGmap = {
            });
         }
         var self=NMC;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(p) {NomanicGmap.showhome(self,p)},function() {NomanicGmap.showhomeip(self)});
+        if (navigator.geolocation&&(location.protocol == 'https:')) {
+            navigator.geolocation.getCurrentPosition(function(p) {NomanicGmap.showhome(self,p)},function(error) {NomanicGmap.showhomeip(error,self)},{maximumAge: 50000, timeout: 20000, enableHighAccuracy: true});
         }
         else {
-            NomanicGmap.showhomeip(self);
+            NomanicGmap.jsonp('http://ipinfo.io', function(data) {
+              NomanicGmap.showhome(self,{coords:{latitude:parseFloat(data.loc.split(',')[0]),longitude:parseFloat(data.loc.split(',')[1])}});
+            });
         }
         return NMC;
     },
@@ -636,11 +655,26 @@ var NomanicGmap = {
         script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
         document.body.appendChild(script);
     },
-    showhomeip:function(NMC) {
+    showhomeip:function(error,NMC) {
+      switch (error.code) {
+        case error.TIMEOUT:
+          console.log("Browser geolocation error !\n\nTimeout.");
+          break;
+        case error.PERMISSION_DENIED:
+          if(error.message.indexOf("Only secure origins are allowed") == 0) {
+            NomanicGmap.tryAPIGeolocation(NMC);
+          }
+          break;
+        case error.POSITION_UNAVAILABLE:
+          console.log("Browser geolocation error !\n\nPosition unavailable.");
+          break;
+      }
+    },
+    tryAPIGeolocation:function(NMC) {
         var self=NMC;
-        NomanicGmap.jsonp('http://ipinfo.io', function(data) {
-          NomanicGmap.showhome(self,{coords:{latitude:data.loc.split(',')[0],longitude:data.loc.split(',')[1]}});
-        });
+        NomanicObject.postAjax( "https://www.googleapis.com/geolocation/v1/geolocate?key="+NomanicKeys.Google_Maps,[],function(success) {
+            NomanicGmap.showhome(self,{coords: {latitude: success.location.lat, longitude: success.location.lng}});
+      },1)
     },
     showhome:function(NMC,p) {
         var opts = {
@@ -657,7 +691,21 @@ var NomanicGmap = {
         NMC.homem=new google.maps.Marker({
           position: {lat: p.coords.latitude, lng: p.coords.longitude},
           icon: NomanicGmap.markerhome,
+          draggable:true,
           map: NMC.map
+        });
+        google.maps.event.addListener(NMC.homem, 'dragstart', function() {
+            NMC.homec.setVisible(false);
+            NMC.directionsDisplay.setMap(null);
+            var o=NomanicObject.ob('b98' + NMC.pid).children[1];
+            if (NMC.layout.showbuttons>3) {
+                o.children[3].style.opacity=0;
+            }
+            NMC.vis1=0;
+        });
+        google.maps.event.addListener(NMC.homem, 'dragend', function() {
+            NMC.homec.setCenter(NMC.homem.getPosition());
+            NMC.homec.setVisible(true);
         });
         NMC.homem.setVisible(false);
         NMC.homec.setVisible(false);
@@ -680,7 +728,9 @@ var NomanicGmap = {
             if (status === google.maps.DirectionsStatus.OK) {
                 NMC.directionsDisplay.setDirections(response);
                 var i,o=NomanicObject.ob('b98' + NMC.pid).children[1],myroute = NMC.directionsDisplay.getDirections().routes[0];
-                o.children[2].style.opacity=1;
+                if (NMC.layout.showbuttons>3) {
+                    o.children[3].style.opacity=1;
+                }
                 NMC.vis1=1;
                 NMC.txtDir = [];
                 for (i=0; i<myroute.legs[0].steps.length; i++) {
