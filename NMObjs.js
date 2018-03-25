@@ -95,6 +95,7 @@ var NomanicObject = {
         document.write('<link href="' + NomanicObject.urlpath + 'core/NMC.css" rel="stylesheet">');
         NomanicObject.addscript([
             [NomanicObject.urlpath + 'core/shim.min.js', 0],
+            [NomanicObject.urlpath + 'core/NMKeys.js', 0],
             [NomanicObject.urlpath + "core/vendor/draggabilly.min.js?r=" + Math.random(), 0],
             [NomanicObject.urlpath + "core/vendor/moment.min.js", 0]
         ]);
@@ -155,7 +156,7 @@ var NomanicObject = {
             document.body.appendChild(elem);
             NomanicObject.ob('overlay00001').innerHTML = '<div class="blk w100 h100" style="background-color:#000;opacity:0.65;"></div>';
             elem.style.display = 'none';
-            NomanicObject.scriptparser(false, false, false, false, 1);
+            NomanicObject.coreparser(false, false, false, false, 1);
         });
     },
     shd: function(x) {
@@ -1041,10 +1042,10 @@ var NomanicObject = {
         return s.split(';;');
     },
     //ajax calls
-    postAjax: function(url, args, success) {
+    postAjax: function(url, args, success, pst) {
         var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
         xhr.args = args;
-        xhr.open('GET', url + (url.indexOf('?') == -1 ? '?' : '&') + 'r=' + Math.random());
+        xhr.open(pst?'POST':'GET', url + (url.indexOf('?') == -1 ? '?' : '&') + 'r=' + Math.random());
         xhr.onreadystatechange = function() {
             if (xhr.readyState > 3 && xhr.status == 200) {
                 success(xhr.responseText, xhr.args);
@@ -1541,6 +1542,37 @@ var NomanicObject = {
         NomanicObject.getsnip(1);
         NomanicObject.scriptparser(o.firstChild, pk, [fn, false, false, o, o], args, 1);
         NomanicObject.sfunc(pk + '.preload', window, o.firstChild, args, 1);
+    },
+    coreparser: function(o, pk, a, args, topper, sniprun, overide, NMC) {
+        if (topper) {
+            NomanicObject.lastpp = o ? o : 'doc';
+        }
+        var b, c, f, p, j, ln = [], ln1= [],
+            pkg = pk ? 'packages/' + pk + '/' : '';
+        if (!o) {
+            b = document.getElementsByClassName('NomanicObject_scripts');
+            for (f = 0; f < b.length; f++) {
+                c = b[f];
+                if (c.hasAttribute('core')) {
+                    p = NomanicObject.stripc(c.getAttribute('core'));
+                    for (j = 0; j < p.length; j++) {
+                        if (p[j] != '') {
+                            ln1.push(NomanicObject.urlpath + 'core/' + p[j]);
+                        }
+                    }
+                }
+            }
+            if (ln1.length > 0) {
+                NomanicObject.loadcore(ln1, function(args) {
+                    NomanicObject.scriptparser(false, false, false, false, 1);
+                    NomanicObject.process();
+                });
+            }
+            else {
+                NomanicObject.scriptparser(false, false, false, false, 1);
+                NomanicObject.process();
+            }
+        }
     },
     scriptparser: function(o, pk, a, args, topper, sniprun, overide, NMC) {
         if (topper) {
