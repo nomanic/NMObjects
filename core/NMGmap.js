@@ -636,7 +636,7 @@ var NomanicGmap = {
         script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
         document.body.appendChild(script);
     },
-    showhomeip:function() {
+    showhomeip:function(NMC) {
         var self=NMC;
         NomanicGmap.jsonp('http://ipinfo.io', function(data) {
           NomanicGmap.showhome(self,{coords:{latitude:data.loc.split(',')[0],longitude:data.loc.split(',')[1]}});
@@ -781,7 +781,6 @@ var NomanicGmap = {
                     break;
             }
             NMC.czoom = 100;
-//            NMC = NomanicGmap.sortgmapslider(NMC, 1);
             NMC = NomanicObject.createafter(NMC);
             NMC = NomanicObject.finally(NMC);
             NMC = NomanicGmap.loadMap(NMC);
