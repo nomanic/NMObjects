@@ -116,3 +116,8 @@
   -ms-transform:     rotate(45deg);
   -o-transform:      rotate(45deg);
 }      
+.datatable > div > div:nth-of-type(odd) {background: #E1F1FF}
+.datatable > div > div:nth-of-type(even) {background: #FFFFFF}
+.gm-style button {
+ display:none;
+}
