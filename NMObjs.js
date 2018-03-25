@@ -155,7 +155,6 @@ var NomanicObject = {
             document.body.appendChild(elem);
             NomanicObject.ob('overlay00001').innerHTML = '<div class="blk w100 h100" style="background-color:#000;opacity:0.65;"></div>';
             elem.style.display = 'none';
-            NomanicObject.process();
             NomanicObject.scriptparser(false, false, false, false, 1);
         });
     },
@@ -865,7 +864,7 @@ var NomanicObject = {
         o.setAttribute('children', '');
         o.setAttribute('snippet', snippet);
         ln = NomanicObject.cleanup(ln);
-        o.innerHTML = '<div class="blk w100 h100" style="' + (allow ? 'pointer-Events:auto;' : '') + '">' + ln + '</div>';
+        o.innerHTML = '<div class="blk w100 h100" style="' + (allow ? 'pointer-Events:auto;' : '') + '">' + ln + '</div><div class="blk" style="' + (allow ? 'pointer-Events:auto;' : '') + '"></div>';
         var b = o.getElementsByClassName('NomanicObject_hidden'),
             f;
         for (f = 0; f < b.length; f++) {
@@ -1226,10 +1225,11 @@ var NomanicObject = {
         return NMC;
     },
     //lightbox
-    openlightbox: function(w, e, fn, NMC) {
+    openlightbox: function(w, e, fn, NMC, callback) {
         var elem = document.createElement('div');
-        elem.style.cssText = 'position:absolute;width:100px;height:100px;top:' + (e.target ? e.pageY : e[0]) + 'px;left:' + (e.target ? e.pageX : e[1]) + 'px;margin-left:-50px;margin-top:-50px;';
+        elem.style.cssText = 'position:absolute;width:100px;height:100px;top:' + (e.target ? e.pageY : e[1]) + 'px;left:' + (e.target ? e.pageX : e[0]) + 'px;margin-left:-50px;margin-top:-50px;';
         document.body.appendChild(elem);
+        elem.callback=callback;
         NomanicObject.scriptparser(w, NMC ? NMC.pkg : false, [NomanicObject.lightbox, [elem, fn, w.hasAttribute('snippet') ? w.getAttribute('snippet') : NomanicObject.ob(w.getAttribute('openfill')), w.hasAttribute('snippet') ? 1 : 0, w.hasAttribute('snippetclick') ? 1 : 0], elem], false, 1, false, 1);
     },
     lightbox: function(args) {
@@ -1355,6 +1355,7 @@ var NomanicObject = {
                         }
                         NMC.opened = 1;
                         iw = NomanicObject.onfire ? NomanicObject.onfire(ar[1]) : 0;
+                        iw = dv.callback ? dv.callback(ar[1]) : 0;
                     }
                     NomanicObject.objs[ar[1].id] = ar[1];
                 },
@@ -1428,6 +1429,17 @@ var NomanicObject = {
             NomanicObject.dofade(inout, dv, span, fn);
         }
     },
+    loadcore: function(ls, g) {
+        var f, ar = [],
+            scriptq = new NomanicObject.loadscript();
+        for (f = 0; f < ls.length; f++) {
+            if (!NomanicObject.in_array(ls[f], NomanicObject.corecache)) {
+                NomanicObject.corecache.push(ls[f]);
+                ar.push(ls[f]);
+            }
+        }
+        scriptq.require(ar, g, 1);
+    },
     loads: function(ls, g, args) {
         NomanicObject.qtodoq([false, false, args[2][3], args[0], false, args[3], NomanicObject.getsnip(2), false, args[2][3] ? (args[2][3].hasAttribute('snippet') ? NomanicObject.baseName(args[2][3].getAttribute('snippet')) : false) : false, false, args[2][3]]);
         var scriptq = new NomanicObject.loadscript();
@@ -1442,6 +1454,7 @@ var NomanicObject = {
         return false;
     },
     scriptcache: [],
+    corecache: [],
     loadt: function(ls, g) {
         var f, ar = [],
             scriptq = new NomanicObject.loadscript();
@@ -1533,7 +1546,7 @@ var NomanicObject = {
         if (topper) {
             NomanicObject.lastpp = o ? o : 'doc';
         }
-        var b, c, f, p, j, ln = [],
+        var b, c, f, p, j, ln = [], ln1= [],
             pkg = pk ? 'packages/' + pk + '/' : '';
         if (!o) {
             b = document.getElementsByClassName('NomanicObject_scripts');
@@ -1543,7 +1556,7 @@ var NomanicObject = {
                     p = NomanicObject.stripc(c.getAttribute('core'));
                     for (j = 0; j < p.length; j++) {
                         if (p[j] != '') {
-                            ln.push(NomanicObject.urlpath + 'core/' + p[j]);
+                            ln1.push(NomanicObject.urlpath + 'core/' + p[j]);
                         }
                     }
                 }
@@ -1563,6 +1576,11 @@ var NomanicObject = {
                         }
                     }
                 }
+            }
+            if (ln1.length > 0) {
+                NomanicObject.loadcore(ln1, function(args) {
+                    NomanicObject.process();
+                });
             }
             if (ln.length > 0) {
                 NomanicObject.loads(ln, function(args) {
@@ -1647,12 +1665,13 @@ var NomanicObject = {
             snip = csnip;
         }
         for (f = 0; f < v.length; f++) {
+            v[f].prt=prt;
             v[f].onclick = function(e) {
                 var w = e.target;
                 while (!NomanicObject.hasClass(w, 'NomanicObject_lightbox')) {
                     w = w.parentNode;
                 }
-                return NomanicObject.openlightbox(w, e, prt);
+                return NomanicObject.openlightbox(w, e, w.prt);
             }
             if (pk) {
                 NomanicObject.sfunc(pk + '.oneach', window, v[f], args, snip);
