@@ -95,7 +95,6 @@ var NomanicObject = {
         document.write('<link href="' + NomanicObject.urlpath + 'core/NMC.css" rel="stylesheet">');
         NomanicObject.addscript([
             [NomanicObject.urlpath + 'core/shim.min.js', 0],
-            [NomanicObject.urlpath + 'core/NMKeys.js', 0],
             [NomanicObject.urlpath + "core/vendor/draggabilly.min.js?r=" + Math.random(), 0],
             [NomanicObject.urlpath + "core/vendor/moment.min.js", 0]
         ]);
