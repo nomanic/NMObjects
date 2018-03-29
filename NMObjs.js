@@ -172,7 +172,6 @@ var NomanicObject = {
         NomanicObject.scriptq = new NomanicObject.loadscript();
         NomanicObject.scriptq.require(sq,
             function() {
-                NomanicObject.process();
             });
     },
     process: function() {
@@ -184,6 +183,7 @@ var NomanicObject = {
                 for (f = 0; f < NomanicObject.depds.length; f++) {
                     NomanicObject.sfunc(NomanicObject.depds[f], window);
                 }
+                NomanicObject.scriptparser(false, false, false, false, 1);
             });
     },
     depds: [],
@@ -1438,7 +1438,11 @@ var NomanicObject = {
                 ar.push(ls[f]);
             }
         }
-        scriptq.require(ar, g, 1);
+        if (ar.length>0) {
+            scriptq.require(ar, function() {
+                NomanicObject.process();
+            }, 1);
+        }
     },
     loads: function(ls, g, args) {
         NomanicObject.qtodoq([false, false, args[2][3], args[0], false, args[3], NomanicObject.getsnip(2), false, args[2][3] ? (args[2][3].hasAttribute('snippet') ? NomanicObject.baseName(args[2][3].getAttribute('snippet')) : false) : false, false, args[2][3]]);
@@ -1562,10 +1566,7 @@ var NomanicObject = {
                 }
             }
             if (ln1.length > 0) {
-                NomanicObject.loadcore(ln1, function(args) {
-                    NomanicObject.scriptparser(false, false, false, false, 1);
-                    NomanicObject.process();
-                });
+                NomanicObject.loadcore(ln1);
             }
             else {
                 NomanicObject.scriptparser(false, false, false, false, 1);
@@ -1609,9 +1610,7 @@ var NomanicObject = {
                 }
             }
             if (ln1.length > 0) {
-                NomanicObject.loadcore(ln1, function(args) {
-                    NomanicObject.process();
-                });
+                NomanicObject.loadcore(ln1);
             }
             if (ln.length > 0) {
                 NomanicObject.loads(ln, function(args) {
