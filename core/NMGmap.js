@@ -17,212 +17,24 @@
 var NomanicGmap = {
     prop: 0.95,
     ref: 'child',
-    NMCdrawPie: function(NMC, n, brd) {
-        var j, lr = 0,
-            data = NMC.plot.data;
-        for (j = 0; j < data.length; j++) {
-            if (NMC.legend.inuse[NMC.cs][j] == 1) {
-                lr++;
-            }
-        }
-        var col, col2, ep, oy, r, i,
-            ttl = 0,
-            props = [],
-            cols = [],
-            gh = NMC.objects.canvas.offsetHeight,
-            gw = NMC.objects.canvas.offsetWidth,
-            ghp = gh * NMC.plot.scalary,
-            gwp = gw * NMC.plot.scalarx,
-            oy1 = -Math.abs((1 - NMC.plot.scalary) * ghp) / 2,
-            ox1 = Math.abs((1 - NMC.plot.scalarx) * gwp) / 2,
-            h = Math.floor(Math.abs((10 * (ghp / 200)) * (1 - (gwp / ghp))));
-        NMC.gw = NMC.gw ? NMC.gw : -1;
-        NMC.gh = NMC.gh ? NMC.gh : -1;
-        if ((gh != NMC.gh) || (gw != NMC.gw)) {
-            NMC.hintfill = NMC.ctx.createLinearGradient(0, 0, gw, gh);
-            NMC.hintfill.addColorStop(0.0, 'rgba(0,0,0,0)');
-            NMC.hintfill.addColorStop(1.0, 'rgba(0,0,0,0.4)');
-        }
-        NMC.ctx.clearRect(0, 0, NMC.objects.panel.offsetWidth, NMC.objects.panel.offsetHeight);
-        NomanicGmap.doborder(NMC, ox1, oy1, gw, gh, brd);
-        if (!NMC.plot.egg) {
-            h = 0;
-        }
-        for (j = 0; j < data.length; j++) {
-            ttl += (NMC.legend.inuse[NMC.cs][j] == 1) ? data[j].series[0] : 0;
-        }
-        if (!n) {
-            for (j = 0; j < data.length; j++) {
-                NMC.plot.data[j].totals[NMC.selx] = ttl;
-            }
-        } else {
-            ttl = (ttl > NMC.plot.data[0].totals[NMC.selx]) ? ttl : NMC.plot.data[0].totals[NMC.selx];
-        }
-        props.push(0);
-        for (j = 0; j < data.length; j++) {
-            if (NMC.legend.inuse[NMC.cs][j] == 1) {
-                props.push(data[j].series[0] / ttl);
-                cols.push(j);
-            }
-        }
-        NMC.ctx.restore();
-        NMC.ctx.save();
-        ttl = 0;
-        for (j = 0; j < props.length; j++) {
-            props[j] = (j == props.length - 1) ? (n ? (parseInt(props[j] * 100) / 100) : (Math.round((1 - ttl) * 100) / 100)) : (parseInt(props[j] * 100) / 100);
-            ttl += props[j];
-        }
-        var t = NMC.plot.shadow,
-            mxd = (NMC.plot.donuty - NMC.plot.donut) / (props.length + 2),
-            r2 = (NMC.plot.outerring ? NMC.plot.donuty - 0.15 : NMC.plot.donuty);
-        NMC.egg2 = false;
-        for (r = h; r > -(NMC.plot.stacked ? (lr * 5) : 1); r--) {
-            oy = 0;
-            for (j = 1; j < props.length; j++) {
-                if (NMC.plot.stacked ? (r > -((lr - (j - 1)) * 5)) : 1) {
-                    ep = (oy + props[j]);
-                    ep = (ep > 1 ? 1 : ep);
-                    var dark = 0;
-                    if (NMC.plot.egg) {
-                        dark = NMC.plot.stacked ? (r > -((lr - (j - 1)) * 5) + 1) ? 1 : 0 : (r > 0);
-                    }
-                    if (NMC.pattern[j - 1]) {
-                        col = NMC.ctx.createPattern(NMC.pattern[j - 1], "repeat");
-                    } else if (NMC.plot.opacityspread && NMC.plot.color) {
-                        var df = 0.8 / data.length,
-                            cl2 = NomanicObject.hexToRgb(dark ? (NomanicObject.lighten(NMC.plot.color, -0.3)) : NMC.plot.color),
-                            col = 'rgba(' + cl2[0] + ',' + cl2[1] + ',' + cl2[2] + ',' + (1 - (df * (j - 1))) + ')';
-                    } else {
-                        col = dark ? (NomanicObject.lighten(NMC.legend.ncolors[NMC.cs][cols[j - 1]], -0.3)) : NMC.legend.ncolors[NMC.cs][cols[j - 1]];
-                    }
-                    var r0 = NMC.plot.donut + ((r2 - NMC.plot.donut) * NMC.plot.data[j - 1].idonut),
-                        r1 = NMC.plot.donut + ((r2 - NMC.plot.donut) * NMC.plot.data[j - 1].odonut),
-                        mxd2 = (NMC.plot.egg2 || (NMC.plot.egg2 === 0)) ? NMC.plot.egg2 : r0,
-                        mxd3 = NMC.plot.egg3 ? NMC.plot.egg3 : r1;
-                    if (mxd3 > 1) {
-                        var sc = mxd3;
-                        mxd2 /= sc;
-                        r0 /= sc;
-                        r1 /= sc;
-                        mxd3 /= sc;
-                    }
-                    NMC.plot.shadow = 0;
-                    NMC.egg3 = 1;
-                    if (NMC.plot.egg2 || (NMC.plot.egg2 === 0)) {
-                        NMC.seg = j - 1;
-                        if (NMC.plot.eggcol2) {
-                            NomanicGmap.polarslice(NMC, 0, 1, r, mxd2, r0, NMC.plot.eggcol2, 0, 1, NMC.plot.eggshade2);
-                        } else if (!NMC.plot.eggcol2) {
-                            NomanicGmap.polarslice(NMC, oy, ep, r, mxd2, r0, col, 0, 1, NMC.plot.eggshade2);
-                        }
-                        NMC.seg = false;
-                    }
-                    NMC.egg2 = 1;
-                    NMC.egg3 = false;
-                    NMC.noedge = ((r == h) || (NMC.plot.stacked ? r == -((lr - (j - 1)) * 5) + 1 : (r === 0))) ? 0 : 1;
-                    NMC.seg = j - 1;
-                    NMC.plot.shadow = t;
-                    NomanicGmap.polarslice(NMC, oy, ep, r, r0, r1, col, 0, 1);
-                    NMC.plot.shadow = 0;
-                    NMC.seg = false;
-                    NMC.egg2 = false;
-                    NMC.egg3 = 1;
-                    if (NMC.plot.egg3) {
-                        if (NMC.plot.eggcol3) {
-                            NomanicGmap.polarslice(NMC, 0, 1, r, r1, mxd3, NMC.plot.eggcol3, 0, 1, NMC.plot.eggshade3);
-                        } else if (!NMC.plot.eggcol3) {
-                            NomanicGmap.polarslice(NMC, oy, ep, r, r1, mxd3, col, 0, 1, NMC.plot.eggshade3);
-                        }
-                    }
-                    if (NMC.plot.innerring && (NMC.plot.donut > 0)) {
-                        NMC.seg = j - 1;
-                        NomanicGmap.polarslice(NMC, oy, ep, r, NMC.plot.donut - 0.17, NMC.plot.donut - 0.085, col, 0, 1);
-                        NMC.seg = false;
-                    }
-                    if (NMC.plot.outerring) {
-                        NMC.seg = j - 1;
-                        NomanicGmap.polarslice(NMC, oy, ep, r, NMC.plot.donuty - 0.085, NMC.plot.donuty, col, 0, 1);
-                        NMC.seg = false;
-                    }
-                    NMC.plot.shadow = t;
-                    NMC.egg3 = false;
-                    oy = ep;
-                    NMC.ctx.restore();
-                    NMC.ctx.save();
-                }
-            }
-        }
-        NMC.showdata(NMC);
-        return NMC;
-    },
-    doborder: function(NMC) {
-        var gh = NMC.objects.graph.offsetHeight,
-            gw = NMC.objects.graph.offsetWidth,
-            oy1 = (NMC.objects.grapha.offsetHeight - gh) / 2,
-            ox1 = (NMC.objects.grapha.offsetWidth - gw) / 2,
-            v = NMC.layout.vertical,
-            o = v ? NMC.objects.axisx : NMC.objects.axisy,
-            tp = NomanicGmap.frm(0, gh, NMC.plot.scaley, oy1);
-        if (v) {
-            o.style.top = (tp + gh + 5) + 'px';
-            o.style.left = (ox1 - o.offsetWidth - 5) + 'px';
-            o.style.width = gw + 'px';
-        } else {
-            o.style.top = (NMC.objects.graph.offsetTop + NMC.objects.grapha.offsetTop) + 'px';
-            o.style.left = (ox1) + 'px';
-            o.style.height = (NMC.objects.graph.offsetHeight) + 'px';
-        }
-    },
-    addClicks: function(NMC) {
-        var self = NMC;
-        NMC = NomanicObject.addClick(NMC, NMC.objects.panel, function(evt, self) {
-            var NMC = NomanicObject.objs[self.id];
-            var iw, f, y, d, dm=9999999999999999, mindi=0, rect = NMC.objects.canvas.getBoundingClientRect(),
-                x = NMC.layout.vertical ? (evt.pageY - rect.top - window.pageYOffset) : (evt.pageX - rect.left - window.pageXOffset),
-                x1 = NMC.layout.vertical ? (evt.pageY - rect.top - window.pageYOffset) : (evt.pageX - rect.left - window.pageXOffset),
-                x2 = (!NMC.layout.vertical) ? (evt.pageY - rect.top - window.pageYOffset) : (evt.pageX - rect.left - window.pageXOffset);
-            switch (NMC.layout.type) {
-                case 'line':
-                    NMC.selx = (Math.abs(Math.round(((x + (NMC.wbw)) / NMC.wbw)) - 1));
-                    if (NMC.plot.marker || NMC.plot.highlight) {
-                        NMC = NMC.redraw(NMC);
-                    }
-                    NMC = NMC.showdata(NMC);
-                    iw = NMC.onselect ? NMC.onselect(NMC, NMC.selx) : 0;
-                    NomanicObject.objs[NMC.id] = NMC;
-                    break;
-                case 'bar':
-                    NMC.selx = (Math.abs(Math.floor(x / NMC.wbw)));
-                    if (NMC.plot.marker || NMC.plot.highlight) {
-                        NMC = NMC.redraw(NMC);
-                    }
-                    NMC = NMC.showdata(NMC);
-                    iw = NMC.onselect ? NMC.onselect(NMC, NMC.selx) : 0;
-                    NomanicObject.objs[NMC.id] = NMC;
-                    break;
-                case 'scatter':
-                    for (f=0;f<NMC.plot.data.length;f++) {
-                        x=(x1-NMC.plot.data[f].series[3]);
-                        y=(x2-NMC.plot.data[f].series[4]);
-                        d=Math.sqrt((x*x)+(y*y));
-                        mindi=(d<dm?f:mindi);
-                        dm=(d<dm?d:dm);
-                    }
-                    NMC.selx = mindi;
-                    NMC = NMC.redraw(NMC);
-                    iw = NMC.onselect ? NMC.onselect(NMC, NMC.selx) : 0;
-                    NomanicObject.objs[NMC.id] = NMC;
-                    break;
-            }
-        });
-        return NMC;
-    },
     setSelect: function(NMC, x) {
-        NMC.selx = x;
-        if (NMC.plot.marker || NMC.plot.highlight) {
-            NMC = NMC.redraw(NMC);
+        if ((NMC.selx!=-1)&&(NMC.markersim[NMC.selx])) {
+            NMC.markers[NMC.selx].setIcon(NMC.markersim[NMC.selx]);
         }
-        NMC = NMC.showdata(NMC);
+        NMC.selx=x;
+        if (NMC.markershg[this.f]) {
+            NMC.markers[this.f].setIcon(NMC.markershg[this.f]);
+        }
+        if (NMC.vis1==1) {
+            NMC.directionsDisplay.setMap(null);
+            o=NomanicObject.ob('b98' + NMC.pid).children[1];
+            if (NMC.layout.showbuttons>3) {
+                o.children[3].style.opacity=0;
+            }
+            NMC.vis1=0;
+        }
+        NomanicGmap.fitToMarkers(this.NMC,this.f);
+        var iw = NMC.onselect ? NMC.onselect(NMC, NMC.selx) : 0;
         NomanicObject.objs[NMC.id] = NMC;
         return NMC;
     },
@@ -251,6 +63,9 @@ var NomanicGmap = {
                 case 'showzoom':
                     options.layout.showzoom = 1;
                     break;
+                case 'showstreet':
+                    options.layout.showstreet = 1;
+                    break;
                 case 'showbuttons':
                     options.layout.showbuttons = k[1]%5;
                     break;
@@ -269,6 +84,9 @@ var NomanicGmap = {
                 case 'home':
                     options.layout.home = NomanicObject.stripq(k[1]);
                     break;
+                case 'lightbox':
+                    options.layout.lightbox = NomanicObject.stripq(k[1]);
+                    break;
             }
         }
         NomanicGmap.makehome(options.layout.home?options.layout.home:'#3E82F7');
@@ -277,8 +95,6 @@ var NomanicGmap = {
             r = NomanicObject.splitter(options.container.getAttribute('data'), '{', '}');
             for (f = 0; f < r.length; f++) {
                 options.plot.data[f] = {};
-                options.plot.data[f].colors = ['#FFF','#454545','#454545'];
-                options.plot.data[f].high = ['#FFF','#454545','#454545'];
                 c = NomanicObject.splitter(r[f]);
                 for (j = 0; j < c.length; j++) {
                     k = c[j].split('|');
@@ -288,7 +104,10 @@ var NomanicGmap = {
                             options.plot.data[f].icon = NomanicObject.stripq(k[1]);
                             break;
                         case 'size':
-                            options.plot.data[f].size = NomanicObject.gary(NomanicObject.stripq(k[1]));
+                            options.plot.data[f].size = parseInt(k[1]);
+                            break;
+                        case 'anchor':
+                            options.plot.data[f].anchor = NomanicObject.gary(NomanicObject.stripq(k[1]));
                             break;
                         case 'address':
                             options.plot.data[f].address = NomanicObject.stripq(k[1]);
@@ -301,8 +120,11 @@ var NomanicGmap = {
                             break;
                         case 'colors':
                             k = NomanicObject.stripc(NomanicObject.stripq(k[1]));
+                            options.plot.data[f].colors=[];
+                            options.plot.data[f].high=[];
                             for (i = 0; i < k.length; i++) {
                                 options.plot.data[f].colors[i] = NomanicObject.stripq(k[i]);
+                                options.plot.data[f].high[i] = NomanicObject.stripq(k[i]);
                             }
                             break;
                         case 'high':
@@ -339,67 +161,6 @@ var NomanicGmap = {
         }
         return false;
     },
-    parsecsv: function(o, ln) {
-        var n = 0,
-            f, s = 0,
-            b = ln.match(/[^\r\n]+/g),
-            b1 = [],
-            b2 = [];
-        for (f = 0; f < b.length; f++) {
-            b[f] = NomanicObject.gary(b[f]);
-        }
-        if (o.plot.data) {
-            s += o.plot.data.length;
-        }
-        if (o.plot.lines) {
-            s += o.plot.lines.length;
-        }
-        if (s <= b.length) {
-            if (o.plot.data) {
-                for (f = 0; f < o.plot.data.length; f++) {
-                    b1.push(b[n]);
-                    n++;
-                }
-            }
-            if (o.plot.lines) {
-                for (f = 0; f < o.plot.lines.length; f++) {
-                    b2.push(b[n]);
-                    n++;
-                }
-            }
-        }
-        return [b1, b2];
-    },
-    loadcsv: function(o, ln) {
-        var n = 0,
-            f, s = 0,
-            b = ln.match(/[^\r\n]+/g);
-        for (f = 0; f < b.length; f++) {
-            b[f] = NomanicObject.gary(b[f]);
-        }
-        if (o.plot.data) {
-            s += o.plot.data.length;
-        }
-        if (o.plot.lines) {
-            s += o.plot.lines.length;
-        }
-        if (s <= b.length) {
-            if (o.plot.data) {
-                for (f = 0; f < o.plot.data.length; f++) {
-                    o.plot.data[f].series = b[n];
-                    n++;
-                }
-            }
-            if (o.plot.lines) {
-                for (f = 0; f < o.plot.lines.length; f++) {
-                    o.plot.lines[f].series = b[n];
-                    n++;
-                }
-            }
-        }
-        o.done = 1;
-        return o;
-    },
     makehome: function(col) {
         var im=new Image(),ctx, c = document.createElement('canvas');
         c.setAttribute('width', 24);
@@ -417,9 +178,31 @@ var NomanicGmap = {
         ctx.closePath();
         NomanicGmap.markerhome={anchor:new google.maps.Point(12,12),url:c.toDataURL('image/png')};
     },
+    makemarkericon: function(NMC, f, img) {
+        var im = new Image(),
+            sz = NMC.plot.data[f].size?NMC.plot.data[f].size:48, fr=sz/80,
+            ctx, c = document.createElement('canvas');
+        im.onload = function() {
+            c.setAttribute('width', sz);
+            c.setAttribute('height', sz);
+            ctx = c.getContext('2d');
+            ctx.drawImage(this, 0, 0,sz,sz);
+            if (NMC.plot.data[f].anchor) {
+                NMC.markersim[f]={anchor:new google.maps.Point(NMC.plot.data[f].anchor[0],NMC.plot.data[f].anchor[1]),url:c.toDataURL('image/png')};
+            }
+            else {
+                NMC.markersim[f]=(c.toDataURL('image/png'));
+            }
+            NMC.setter--;
+            if (NMC.setter===0) {
+                NomanicGmap.follow(NMC);
+            }
+        }
+        im.src = NomanicObject.urlpath+'assets/'+(img?img:'blank.png');
+    },
     makemarker: function(NMC, f,high, cols, img) {
         var i, im = new Image(),
-            sz = 48, fr=sz/80,
+            sz = NMC.plot.data[f].size?NMC.plot.data[f].size:48, fr=sz/80,
             ctx, c = document.createElement('canvas'),
             ctx2, c2 = document.createElement('canvas'),
             ctx3, c3 = document.createElement('canvas');
@@ -517,11 +300,11 @@ var NomanicGmap = {
             zoom: NMC.layout.zoom,
             center: myLatLng,
             panControl:true,
-            zoomControl:true,
+            zoomControl:NMC.layout.showzoom?true:false,
             scrollwheel: false,
             mapTypeControl:false,
-            scaleControl:true,
-            streetViewControl:true,
+            scaleControl:NMC.layout.showzoom?true:false,
+            streetViewControl:NMC.layout.showstreet?true:false,
             overviewMapControl:true,
             rotateControl:true
         };
@@ -534,28 +317,30 @@ var NomanicGmap = {
         NMC.map = new google.maps.Map(o.children[0],opts);
 
         for (f=0;f<NMC.markersp.length;f++) {
-           NMC.markers.push(new google.maps.Marker({
-              position: {lat: NMC.markersp[f][0], lng: NMC.markersp[f][1]},
-              icon: (f>0?NMC.markersim[f]:NMC.markershg[f]),
-              map: NMC.map
-            }));
+            if (NMC.plot.data[f].colors) {
+                NMC.markers.push(new google.maps.Marker({
+                  position: {lat: NMC.markersp[f][0], lng: NMC.markersp[f][1]},
+                  icon: (f!=NMC.selx?NMC.markersim[f]:NMC.markershg[f]),
+                  map: NMC.map
+                }));
+            }
+            else if (NMC.plot.data[f].icon) {
+                NMC.markers.push(new google.maps.Marker({
+                  position: {lat: NMC.markersp[f][0], lng: NMC.markersp[f][1]},
+                  icon: NMC.markersim[f],
+                  map: NMC.map
+                }));
+            }
+            else {
+                NMC.markers.push(new google.maps.Marker({
+                  position: {lat: NMC.markersp[f][0], lng: NMC.markersp[f][1]},
+                  map: NMC.map
+                }));
+            }
             NMC.markers[f].NMC=NMC;
             NMC.markers[f].f=f+1-1;
             NMC.markers[f].addListener('click', function() {
-                if (NMC.cm!=-1) {
-                    NMC.markers[NMC.cm].setIcon(NMC.markersim[NMC.cm]);
-                }
-                NMC.cm=this.f;
-                NMC.markers[this.f].setIcon(NMC.markershg[this.f]);
-                if (NMC.vis1==1) {
-                    NMC.directionsDisplay.setMap(null);
-                    o=NomanicObject.ob('b98' + NMC.pid).children[1];
-                    if (NMC.layout.showbuttons>3) {
-                        o.children[3].style.opacity=0;
-                    }
-                    NMC.vis1=0;
-                }
-                NomanicGmap.fitToMarkers(this.NMC,this.f);
+                NomanicGmap.setSelect(this.NMC,this.f);
             });
         }
         NomanicGmap.fitToMarkers(NMC);
@@ -587,50 +372,20 @@ var NomanicGmap = {
                 var o,NMC=this.NMC;
                 if (!NMC.homem) {return;}
                 NMC.vis=1-NMC.vis;
-                NMC.homem.setVisible(NMC.vis?true:false);
-                NMC.homec.setVisible(NMC.vis?true:false);
-                o=NomanicObject.ob('b98' + NMC.pid).children[1];
-                if (NMC.vis===0) {
-                    NMC.directionsDisplay.setMap(null);
-                    NMC.vis1=0;
-                    if (NMC.layout.showbuttons>3) {
-                        o.children[3].style.opacity=NMC.vis;
-                    }
-                }
-                if (NMC.layout.showbuttons>2) {
-                    o.children[2].style.opacity=NMC.vis;
-                }
-                NomanicGmap.fitToMarkers(NMC);
+                NMC.showhome(NMC,NMC.vis);
            });
         }
         if (NMC.layout.showbuttons>2) {
            b[2].NMC=NMC;
            b[2].addEventListener("click", function(){
-                var o,NMC=this.NMC;
-                if (NMC.vis1===0) {
-                    NomanicGmap.displayRoute(NMC);
-                }
-                else {
-                    NMC.directionsDisplay.setMap(null);
-                    o=NomanicObject.ob('b98' + NMC.pid).children[1];
-                    if (NMC.layout.showbuttons>3) {
-                        o.children[3].style.opacity=0;
-                    }
-                    NMC.vis1=0;
-                }
-                NomanicObject.objs[NMC.id]=NMC;
+                var NMC=this.NMC;
+                NMC.showroute(NMC.vis1);
            });
         }
         if (NMC.layout.showbuttons>3) {
            b[3].NMC=NMC;
            b[3].addEventListener("click", function(){
-                var w=NomanicObject.ob("Gmap_0001"),self=this.NMC,sz = NomanicObject.vsz(),e=[];
-                e[0]=sz[0]/2;
-                e[1]=sz[1]/2;
-                NomanicObject.openlightbox(w,e,w.prt,false,function(NMC) {
-                    NomanicObject.ob('b98' + NMC.pid).style.pointerEvents='auto';
-                    NomanicGmap.showroute(NomanicObject.ob('b98' + NMC.pid),self.txtDir);
-                });
+                this.NMC.popup();
            });
         }
         var self=NMC;
@@ -720,7 +475,7 @@ var NomanicGmap = {
         NMC.directionsDisplay.setMap(NMC.map);
         NMC.directionsService.route({
             origin: NMC.homem.getPosition(),
-            destination: NMC.markers[NMC.cm].getPosition(),
+            destination: NMC.markers[NMC.selx].getPosition(),
             waypoints: [],
             travelMode: google.maps.TravelMode.DRIVING,
             avoidTolls: true
@@ -767,15 +522,15 @@ var NomanicGmap = {
     },
     //create
     create: function(NMC) {
-        var self = NMC;
+        var f,self = NMC;
         NMC.markersim=[];
         NMC.markershg=[];
         NMC.markersp=[];
         NMC.markers=[];
         NMC.pts=0;
-        NMC.cm=0;
+        NMC.selx=NMC.layout.select?NMC.layout.select:0;
         NMC.vis1=0;
-        NMC.setter=NMC.plot.data.length*2;
+        NMC.setter=0;
         for (f=0;f<NMC.plot.data.length;f++) {
             if (!NMC.plot.data[f].latlng) {
                 NMC.pts++;
@@ -785,8 +540,19 @@ var NomanicGmap = {
             else {
                 NMC.markersp[f]=NMC.plot.data[f].latlng;
             }
-            NomanicGmap.makemarker(NMC,f,0,NMC.plot.data[f].colors,NMC.plot.data[f].image);
-            NomanicGmap.makemarker(NMC,f,1,NMC.plot.data[f].high,NMC.plot.data[f].image);
+            if (NMC.plot.data[f].colors) {
+                NMC.setter+=2;
+                NomanicGmap.makemarker(NMC,f,0,NMC.plot.data[f].colors,NMC.plot.data[f].image);
+                NomanicGmap.makemarker(NMC,f,1,NMC.plot.data[f].high,NMC.plot.data[f].image);
+            }
+            else if (NMC.plot.data[f].icon) {
+                NMC.setter++;
+                NomanicGmap.makemarkericon(NMC,f,NMC.plot.data[f].icon);
+            }
+            else {
+                NMC.markershg[f]=false;
+                NMC.markersim[f]=false;
+            }
         }
         if (NMC.plot.data.length===0) {
             NomanicGmap.follow(NMC);
@@ -803,15 +569,64 @@ var NomanicGmap = {
             NMC.updateaxis=function(NMC) {return NMC;}
             NMC.redraw=function(NMC) {return NMC;}
             NMC.showdata=function(NMC) {return NMC;}
-            NMC.addClicks = NomanicGmap.addClicks;
+            NMC.addClicks = function(NMC) {return NMC;}
             NMC.setselect = function(x) {
                 return NomanicGmap.setSelect(self, x);
             }
-            NMC.getselect = function(x) {
+            NMC.getselect = function() {
                 return self.selx;
             }
             NMC.attach = function(evt, fn) {
                 return NomanicObject.attacher(self, evt, fn);
+            }
+            NMC.fitToMarkers=function() {
+                NomanicGmap.fitToMarkers(self);
+            }
+            NMC.showhome=function(x) {
+                var o,NMC=self;
+                if (!NMC.homem) {return;}
+                NMC.vis=x;
+                NMC.homem.setVisible(NMC.vis?true:false);
+                NMC.homec.setVisible(NMC.vis?true:false);
+                o=NomanicObject.ob('b98' + NMC.pid).children[1];
+                if (NMC.vis===0) {
+                    NMC.directionsDisplay.setMap(null);
+                    NMC.vis1=0;
+                    if (NMC.layout.showbuttons>3) {
+                        o.children[3].style.opacity=NMC.vis;
+                    }
+                }
+                if (NMC.layout.showbuttons>2) {
+                    o.children[2].style.opacity=NMC.vis;
+                }
+                NMC.fitToMarkers();
+                NomanicObject.objs[NMC.id]=NMC;
+            }
+            NMC.showroute=function(x) {
+                var o,NMC=self;
+                NMC.vis1=x;
+                if (NMC.vis1===0) {
+                    NomanicGmap.displayRoute(NMC);
+                }
+                else {
+                    NMC.directionsDisplay.setMap(null);
+                    o=NomanicObject.ob('b98' + NMC.pid).children[1];
+                    if (NMC.layout.showbuttons>3) {
+                        o.children[3].style.opacity=0;
+                    }
+                    NMC.vis1=0;
+                }
+                NomanicObject.objs[NMC.id]=NMC;
+            }
+            NMC.getroute=function() {
+                return self.txtDir?self.txtDir:[];
+            }
+            NMC.popup=function() {
+                var w=NomanicObject.ob(self.layout.lightbox),sz = NomanicObject.vsz(),e=[sz[0]/2,window.pageYOffset+(sz[1]/2)];
+                NomanicObject.openlightbox(w,e,w.prt,false,function(NMC) {
+                    NomanicObject.ob('b98' + NMC.pid).style.pointerEvents='auto';
+                    NomanicGmap.showroute(NomanicObject.ob('b98' + NMC.pid),self.txtDir);
+                });
             }
             NMC.layout.gtype = 1;
             NMC.layout.subtype = 1;
