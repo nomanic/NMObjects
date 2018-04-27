@@ -14,6 +14,83 @@
  */
 "use strict";
 
+function Cloud(opts) {
+    if (opts) {
+        this.opts=opts;
+        this.opts.size=this.opts.size?this.opts.size:36;
+        this.opts.icons=this.opts.icons?this.opts.icons:[32,38,39,41,44];
+        this.getPosition = function() {
+            return new google.maps.LatLng(this.opts.position.lat,this.opts.position.lng);
+        }
+    }
+    this.draw=function() {
+        var self = this,ln,div = this.div,pin;
+        if (!this.div) {
+            var o = NomanicObject.ob('b98'+this.opts.NMC.pid).children[2];
+            o.innerHTML+='<IMG src="'+NomanicObject.urlpath+'ims/'+this.opts.icons[Math.floor(Math.random()*this.opts.icons.length)]+'.png" style="position:absolute;margin-left:'+(-this.opts.size/2)+'px;margin-top:'+(-this.opts.size/2)+'px;width:'+this.opts.size+'px;height:'+this.opts.size+'px;"/>';
+            this.div=o.children[o.children.length-1];
+        }
+        this.div.style.left = this.opts.x + '%';
+        this.div.style.top = this.opts.y + '%';
+    }
+    this.draw();
+    return this;
+}
+
+function CustomMarker(opts) {
+    this.setValues(opts);
+    this.opts=opts;
+    this.opts.size=this.opts.data.size;
+    this.getPosition = function() {
+        return new google.maps.LatLng(this.opts.position.lat,this.opts.position.lng);
+    }
+}
+
+function markersetup() {
+    CustomMarker.prototype = new google.maps.OverlayView();
+    CustomMarker.prototype.draw = function() {
+        var self = this,ln,div = this.div,pin;
+        if (!div) {
+            this.div = document.createElement('div');
+            div = this.div 
+            ln = '<div class="shadow"></div>' +
+                '<div class="pulse"></div>' +
+                '<div class="pin-wrap">' +
+                '<div class="pin"></div>' +
+                '</div>';
+            div.innerHTML=ln;
+            this.pinWrap = this.div.getElementsByClassName('pin-wrap');
+            this.pin = this.div.getElementsByClassName('pin');
+            pin=this.pin[0];
+            pin.innerHTML='<IMG src="'+(this.opts.icon.url?this.opts.icon.url:this.opts.icon)+'" style="width:'+this.opts.size+'px;height:'+this.opts.size+'px;"/>';
+            pin.style.position = 'absolute';
+            pin.style.width=-this.opts.size+'px';
+            pin.style.height=-this.opts.size+'px';
+            this.pinShadow = this.div.getElementsByClassName('shadow');
+            div.style.position = 'absolute';
+            div.style.width=-this.opts.size+'px';
+            div.style.height=-this.opts.size+'px';
+            div.style.cursor = 'pointer';
+            pin.style.marginLeft=(-this.opts.size/2)+'px';
+            pin.style.marginTop=(-this.opts.size)+'px';
+            if (this.opts.icon.anchor) {
+                pin.style.marginLeft=(-this.opts.icon.anchor.x)+'px';
+                pin.style.marginTop=(-this.opts.icon.anchor.y)+'px';
+            }
+            var panes = this.getPanes();
+            panes.overlayImage.appendChild(div);
+            google.maps.event.addDomListener(div, "click", function(event) {
+                google.maps.event.trigger(self, "click", event);
+            });
+        }
+        var point = this.getProjection().fromLatLngToDivPixel(this.getPosition());
+        if (point) {
+            div.style.left = point.x + 'px';
+            div.style.top = point.y + 'px';
+        }
+    };
+}
+
 var NomanicGmap = {
     prop: 0.95,
     ref: 'child',
@@ -81,6 +158,15 @@ var NomanicGmap = {
                 case 'zoom':
                     options.layout.zoom = parseInt(k[1]);
                     break;
+                case 'weather':
+                    options.layout.weather = parseInt(k[1]);
+                    if (k[2]) {
+                        options.layout.weathersz = parseInt(k[2]);
+                    }
+                    if (k[3]) {
+                        options.layout.weathericons = NomanicObject.gary(k[3]);
+                    }
+                    break;
                 case 'home':
                     options.layout.home = NomanicObject.stripq(k[1]);
                     break;
@@ -89,12 +175,12 @@ var NomanicGmap = {
                     break;
             }
         }
-        NomanicGmap.makehome(options.layout.home?options.layout.home:'#3E82F7');
         options = NomanicObject.parsebase(options, p, dv);
         if (options.container.hasAttribute('data')) {
             r = NomanicObject.splitter(options.container.getAttribute('data'), '{', '}');
             for (f = 0; f < r.length; f++) {
                 options.plot.data[f] = {};
+                options.plot.data[f].size=48;
                 c = NomanicObject.splitter(r[f]);
                 for (j = 0; j < c.length; j++) {
                     k = c[j].split('|');
@@ -105,6 +191,9 @@ var NomanicGmap = {
                             break;
                         case 'size':
                             options.plot.data[f].size = parseInt(k[1]);
+                            break;
+                        case 'pulse':
+                            options.plot.data[f].pulse = 1;
                             break;
                         case 'anchor':
                             options.plot.data[f].anchor = NomanicObject.gary(NomanicObject.stripq(k[1]));
@@ -136,8 +225,53 @@ var NomanicGmap = {
                     }
                 }
             }
-            if (options.datatype == 'inline') {
-                options.done = 1;
+        }
+        options.plot.home = {};
+        options.plot.home.size=48;
+        if (options.container.hasAttribute('home')) {
+            r = NomanicObject.splitter(options.container.getAttribute('home'), '{', '}');
+            c = NomanicObject.splitter(r[0]);
+            for (j = 0; j < c.length; j++) {
+                k = c[j].split('|');
+                k[1] = k[1] ? k[1] : 1;
+                switch (k[0]) {
+                    case 'image':
+                        options.plot.home.icon = NomanicObject.stripq(k[1]);
+                        break;
+                    case 'size':
+                        options.plot.home.size = parseInt(k[1]);
+                        break;
+                    case 'pulse':
+                        options.plot.home.pulse = 1;
+                        break;
+                    case 'anchor':
+                        options.plot.home.anchor = NomanicObject.gary(NomanicObject.stripq(k[1]));
+                        break;
+                    case 'address':
+                        options.plot.home.address = NomanicObject.stripq(k[1]);
+                        break;
+                    case 'latlng':
+                        options.plot.home.latlng = NomanicObject.gary(NomanicObject.stripq(k[1]));
+                        break;
+                    case 'icon':
+                        options.plot.home.image = NomanicObject.stripq(k[1]);
+                        break;
+                    case 'colors':
+                        k = NomanicObject.stripc(NomanicObject.stripq(k[1]));
+                        options.plot.home.colors=[];
+                        options.plot.home.high=[];
+                        for (i = 0; i < k.length; i++) {
+                            options.plot.home.colors[i] = NomanicObject.stripq(k[i]);
+                            options.plot.home.high[i] = NomanicObject.stripq(k[i]);
+                        }
+                        break;
+                    case 'high':
+                        k = NomanicObject.stripc(NomanicObject.stripq(k[1]));
+                        for (i = 0; i < k.length; i++) {
+                            options.plot.home.high[i] = NomanicObject.stripq(k[i]);
+                        }
+                        break;
+                }
             }
         }
         return options;
@@ -161,26 +295,9 @@ var NomanicGmap = {
         }
         return false;
     },
-    makehome: function(col) {
-        var im=new Image(),ctx, c = document.createElement('canvas');
-        c.setAttribute('width', 24);
-        c.setAttribute('height', 24);
-        ctx = c.getContext('2d');
-        ctx.beginPath();
-        ctx.fillStyle = '#FFF';
-        ctx.arc(12, 12, 12, 0, Math.PI*2);
-        ctx.fill();
-        ctx.closePath();
-        ctx.beginPath();
-        ctx.fillStyle = col;
-        ctx.arc(12, 12, 10, 0, Math.PI*2);
-        ctx.fill();
-        ctx.closePath();
-        NomanicGmap.markerhome={anchor:new google.maps.Point(12,12),url:c.toDataURL('image/png')};
-    },
     makemarkericon: function(NMC, f, img) {
         var im = new Image(),
-            sz = NMC.plot.data[f].size?NMC.plot.data[f].size:48, fr=sz/80,
+            sz = NMC.plot.data[f].size, fr=sz/80,
             ctx, c = document.createElement('canvas');
         im.onload = function() {
             c.setAttribute('width', sz);
@@ -200,9 +317,9 @@ var NomanicGmap = {
         }
         im.src = NomanicObject.urlpath+'assets/'+(img?img:'blank.png');
     },
-    makemarker: function(NMC, f,high, cols, img) {
+    makemarker: function(NMC, f,high, cols, img,home) {
         var i, im = new Image(),
-            sz = NMC.plot.data[f].size?NMC.plot.data[f].size:48, fr=sz/80,
+            sz = NMC.plot.data[f].size, fr=sz/80,
             ctx, c = document.createElement('canvas'),
             ctx2, c2 = document.createElement('canvas'),
             ctx3, c3 = document.createElement('canvas');
@@ -234,7 +351,12 @@ var NomanicGmap = {
                 var i2=new Image();
                 i2.onload=function() {
                     ctx.drawImage(this, 0, 0,sz,sz);
-                    (high?NMC.markershg:NMC.markersim)[f]=(c.toDataURL('image/png'));
+                    if (home) {
+                        NMC.markerhome=(c.toDataURL('image/png'));
+                    }
+                    else {
+                        (high?NMC.markershg:NMC.markersim)[f]=(c.toDataURL('image/png'));
+                    }
                     NMC.setter--;
                     if (NMC.setter===0) {
                         NomanicGmap.follow(NMC);
@@ -256,7 +378,7 @@ var NomanicGmap = {
             NomanicGmap.drawMap(NMC);
         }
     },
-    fitToMarkers:function(NMC,x) {
+    fitToMarkers:function(NMC,x,y) {
         var bounds = new google.maps.LatLngBounds();
         if (x||(x===0)) {
             var latlng = NMC.markers[x].getPosition();
@@ -282,6 +404,32 @@ var NomanicGmap = {
         if (x||(x===0)) {
             NMC.map.setCenter(NMC.markers[x].getPosition());
         }
+        if (y&&NMC.layout.weather) {
+                NomanicGmap.populate(NMC,NMC.layout.weather,NMC.layout.weathersz,NMC.layout.weathericons);
+        }
+    },
+    populate:function(NMC,n,sz,icons) {
+        var i,x,y,opts;
+        NMC.clouds=[];
+        for (i = 0; i < n; i++) {
+            x = (Math.random() * (100/n))+(i*(100/n));
+            y = Math.random() * 100;
+            opts={
+                  x: x,
+                  y: y,
+                  NMC: NMC,
+                  map: NMC.map
+                };
+            if (sz) {opts.size=sz;}
+            if (icons) {opts.icons=icons;}
+            NMC.clouds.push(new Cloud(opts));
+        }
+        google.maps.event.addListener(NMC.map, 'bounds_changed', function() {
+            var i;
+            for (i = 0; i < NMC.clouds.length; i++) {
+                NMC.clouds[i].draw();
+            }
+        });
     },
     getradius:function(NMC) {
         var bounds = NMC.map.getBounds(),
@@ -312,12 +460,20 @@ var NomanicGmap = {
             opts.styles=sty;
         }
         o=NomanicObject.ob('b98' + NMC.pid);
-        o.innerHTML = '<div class="blk w100 h100"></div><div class="blk"></div>';
+        o.innerHTML = '<div class="blk w100 h100"></div><div class="blk"></div><div class="blk w100 h100" style="pointer-events:none;"></div>';
         o.style.pointerEvents='auto';
         NMC.map = new google.maps.Map(o.children[0],opts);
-
+        markersetup();
         for (f=0;f<NMC.markersp.length;f++) {
-            if (NMC.plot.data[f].colors) {
+            if (NMC.plot.data[f].pulse) {
+                NMC.markers.push(new CustomMarker({
+                  position: {lat: NMC.markersp[f][0], lng: NMC.markersp[f][1]},
+                  icon: NMC.markersim[f],
+                  map: NMC.map,
+                  data: NMC.plot.data[f]
+                }));
+            }
+            else if (NMC.plot.data[f].colors) {
                 NMC.markers.push(new google.maps.Marker({
                   position: {lat: NMC.markersp[f][0], lng: NMC.markersp[f][1]},
                   icon: (f!=NMC.selx?NMC.markersim[f]:NMC.markershg[f]),
@@ -343,7 +499,7 @@ var NomanicGmap = {
                 NomanicGmap.setSelect(this.NMC,this.f);
             });
         }
-        NomanicGmap.fitToMarkers(NMC);
+        NomanicGmap.fitToMarkers(NMC,false,1);
         o=NomanicObject.ob('b98' + NMC.pid).children[1];
         if (NMC.layout.showbuttons>0) {
            ln+='<img class="gbut Gooey_object" src="'+NomanicObject.urlpath+'ims/gmapzoom.png" style="float:left;margin-left:6px;margin-top:6px;cursor:pointer;"/>';
@@ -432,17 +588,6 @@ var NomanicGmap = {
       },1)
     },
     showhome:function(NMC,p) {
-        var opts = {
-          strokeColor: NMC.layout.home?NMC.layout.home:'#3E82F7',
-          strokeOpacity: 0.75,
-          strokeWeight: 1,
-          fillColor: NMC.layout.home?NMC.layout.home:'#3E82F7',
-          fillOpacity: 0.35,
-          map: NMC.map,
-          center: {lat: p.coords.latitude, lng: p.coords.longitude},
-          radius: NomanicGmap.getradius(NMC)*1000           
-        };
-        NMC.homec = new google.maps.Circle(opts);
         NMC.homem=new google.maps.Marker({
           position: {lat: p.coords.latitude, lng: p.coords.longitude},
           icon: NomanicGmap.markerhome,
@@ -450,7 +595,6 @@ var NomanicGmap = {
           map: NMC.map
         });
         google.maps.event.addListener(NMC.homem, 'dragstart', function() {
-            NMC.homec.setVisible(false);
             NMC.directionsDisplay.setMap(null);
             var o=NomanicObject.ob('b98' + NMC.pid).children[1];
             if (NMC.layout.showbuttons>3) {
@@ -458,12 +602,7 @@ var NomanicGmap = {
             }
             NMC.vis1=0;
         });
-        google.maps.event.addListener(NMC.homem, 'dragend', function() {
-            NMC.homec.setCenter(NMC.homem.getPosition());
-            NMC.homec.setVisible(true);
-        });
         NMC.homem.setVisible(false);
-        NMC.homec.setVisible(false);
         NMC.directionsService = new google.maps.DirectionsService;
         NMC.directionsDisplay = new google.maps.DirectionsRenderer({
             map: NMC.map, suppressMarkers: true, polylineOptions:{strokeColor:(NMC.layout.home?NMC.layout.home:'#3E82F7')}
@@ -531,6 +670,17 @@ var NomanicGmap = {
         NMC.selx=NMC.layout.select?NMC.layout.select:0;
         NMC.vis1=0;
         NMC.setter=0;
+        if (NMC.plot.home.colors) {
+            NMC.setter++;
+            NomanicGmap.makemarker(NMC,0,0,NMC.plot.home.colors,NMC.plot.home.image,1);
+        }
+        else if (NMC.plot.home.icon) {
+            NMC.setter++;
+            NomanicGmap.makemarkericon(NMC,0,NMC.plot.home.icon);
+        }
+        else {
+            NMC.markerhome=false;
+        }
         for (f=0;f<NMC.plot.data.length;f++) {
             if (!NMC.plot.data[f].latlng) {
                 NMC.pts++;
@@ -587,7 +737,6 @@ var NomanicGmap = {
                 if (!NMC.homem) {return;}
                 NMC.vis=x;
                 NMC.homem.setVisible(NMC.vis?true:false);
-                NMC.homec.setVisible(NMC.vis?true:false);
                 o=NomanicObject.ob('b98' + NMC.pid).children[1];
                 if (NMC.vis===0) {
                     NMC.directionsDisplay.setMap(null);
