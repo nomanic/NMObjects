@@ -315,7 +315,7 @@ var NomanicGraph = {
         }
         NMC.ctx.restore();
         NMC.ctx.save();
-        NMC.ctx.lineWidth = lw / 2;
+        NMC.ctx.lineWidth = (lw / 2)*NMC.plot.thick;
         for (r = 0; r < dat.length; r++) {
             if (NMC.legend.inuse[NMC.cs][ak + r] == 1) {
                 pnts = [];
@@ -1141,7 +1141,7 @@ var NomanicGraph = {
             NMC.ctx.closePath();
         }
         NomanicGraph.doborder(NMC, ox1, oy1, gw, gh, brd);
-        NMC.bw = (v ? (gh * NMC.plot.scalary) : (gw * NMC.plot.scalarx)) / NMC.barspp;
+        NMC.bw = (v ? (NMC.objects.panel.offsetHeight * NMC.plot.scalary) : (gw * NMC.plot.scalarx)) / NMC.barspp;
         NMC.legend.heights = [];
         for (r = 0; r < dat.length; r++) {
             NMC.legend.heights[r] = [];
@@ -1169,11 +1169,11 @@ var NomanicGraph = {
                         h = x0 - yp,
                         w, x;
                     if (NMC.plot.stacked) {
-                        w = NMC.bw - (NMC.plot.seperatex ? NMC.plot.seperatex : 2);
+                        w = NMC.bw - ((NMC.plot.seperatex||(NMC.plot.seperatex===0))? NMC.plot.seperatex : 2);
                         x = (NMC.bw * f);
                     } else {
-                        w = (NMC.bw / lr) - (NMC.plot.seperatex ? NMC.plot.seperatex : 2);
-                        x = NMC.bw * f + (r * (NMC.bw / lr));
+                        w = ((NMC.bw * (NMC.plot.seperates ? NMC.plot.seperates : 1)) / lr) - ((NMC.plot.seperatex||(NMC.plot.seperatex===0)) ? NMC.plot.seperatex : 2);
+                        x = NMC.bw * f + (r * ((NMC.bw * (NMC.plot.seperates ? NMC.plot.seperates : 1)) / lr));
                     }
                     var fill = NMC.pattern[r] ? NMC.ctx.createPattern(NMC.pattern[r], 'repeat') : (((NMC.selx === f) && NMC.plot.highlight) ? dat[r].high : NMC.legend.ncolors[NMC.cs][r]);
                     alpha = (dat[r].alpha ? dat[r].alpha : 1);
@@ -1323,7 +1323,7 @@ var NomanicGraph = {
                 NMC.ctx.arc(xp0, yp0, bw, 0, NomanicObject.Pi2, true);
                 NMC.ctx.fill();
                 if (NMC.plot.outline) {
-                    NMC.ctx.lineWidth = 3;
+                    NMC.ctx.lineWidth = 3*NMC.plot.thick;
                     NMC.ctx.strokeStyle=(NMC.layout.chart.nink ? NMC.layout.chart.nink : NMC.layout.pencil.nink);
                     NMC.ctx.stroke();
                 }
@@ -1339,7 +1339,7 @@ var NomanicGraph = {
             else {
                 if (NMC.plot.data[f].error) {
                     NMC.ctx.beginPath();
-                    NMC.ctx.lineWidth = lw/2;
+                    NMC.ctx.lineWidth = (lw/2)*NMC.plot.thick;
                     NMC.ctx.strokeStyle=(NMC.layout.chart.nink ? NMC.layout.chart.nink : NMC.layout.pencil.nink);
                     yp0a = NomanicObject.converth(NMC.plot.data[f].series[1]-NMC.plot.data[f].error, (v ? 0 : gh), (v ? gw : 0), NMC.absmin, NMC.absmax);
                     yp0b = NomanicObject.converth(NMC.plot.data[f].series[1]+NMC.plot.data[f].error, (v ? 0 : gh), (v ? gw : 0), NMC.absmin, NMC.absmax);
@@ -1360,7 +1360,7 @@ var NomanicGraph = {
                 }
                 if (NMC.plot.data[f].cap) {
                     NMC.ctx.beginPath();
-                    NMC.ctx.lineWidth = lw;
+                    NMC.ctx.lineWidth = lw*NMC.plot.thick;
                     NMC.ctx.strokeStyle = fill;
                     NMC.ctx.moveTo(xp0,yp0-ir);
                     NMC.ctx.lineTo(xp0,yp0+ir);
@@ -1371,7 +1371,7 @@ var NomanicGraph = {
                 }
                 else {
                     NMC.ctx.beginPath();
-                    NMC.ctx.lineWidth = lw;
+                    NMC.ctx.lineWidth = lw*NMC.plot.thick;
                     NMC.ctx.strokeStyle = fill;
                     NMC.ctx.moveTo(xp0-ir,yp0-ir);
                     NMC.ctx.lineTo(xp0+ir,yp0+ir);
@@ -1387,7 +1387,7 @@ var NomanicGraph = {
         if (NMC.plot.regression) {
             NMC.ctx.save();
             ln=NomanicGraph.linearRegression(NMC);
-            NMC.ctx.lineWidth = lw/2;
+            NMC.ctx.lineWidth = (lw/2)*NMC.plot.thick;
             NMC.ctx.strokeStyle=(NMC.layout.chart.nink ? NMC.layout.chart.nink : NMC.layout.pencil.nink);
             if ((ln[1]>NMC.absmin)&&(ln[1]<NMC.absmax)) {
                 xp0=[0,ln[1]];
@@ -1768,7 +1768,7 @@ var NomanicGraph = {
                     pnts.push(y);
                     x += NMC.wbw + ((gw - x < NMC.wbw) ? gw % NMC.wbw : 0);
                 }
-                NMC.ctx.lineWidth = lw / 2;
+                NMC.ctx.lineWidth = (lw / 2)*NMC.plot.thick;
                 if (NMC.plot.shadow) {
                     NMC.ctx.shadowOffsetX = h4;
                     NMC.ctx.shadowOffsetY = h4;
@@ -1871,7 +1871,7 @@ var NomanicGraph = {
                         for (i = 0; i < pts2.length; i++) {
                             if (dat[r].outline) {
                                 NMC.ctx.beginPath();
-                                NMC.ctx.lineWidth = (lw / 2) + 2;
+                                NMC.ctx.lineWidth = ((lw / 2) + 2)*NMC.plot.thick;
                                 NMC.ctx.strokeStyle = dat[r].fill ? (dat[r].fill == 1 ? '#A0A0A0' : dat[r].fill) : '#A0A0A0';
                                 NMC.ctx.moveTo(pts2[i][0][0] + ox1, NomanicGraph.frm(pts2[i][0][1], gh, NMC.plot.scalary, oy1));
                                 for (x = 1; x < pts2[i].length; x++) {
@@ -1890,7 +1890,7 @@ var NomanicGraph = {
                                 NMC.ctx.closePath();
                             }
                             NMC.ctx.beginPath();
-                            NMC.ctx.lineWidth = (lw / 2);
+                            NMC.ctx.lineWidth = (lw / 2)*NMC.plot.thick;
                             NMC.ctx.strokeStyle = fill;
                             NMC.ctx.moveTo(pts2[i][0][0] + ox1, NomanicGraph.frm(pts2[i][0][1], gh, NMC.plot.scalary, oy1));
                             for (x = 1; x < pts2[i].length; x++) {
@@ -1915,7 +1915,7 @@ var NomanicGraph = {
                     } else {
                         if (dat[r].outline) {
                             NMC.ctx.beginPath();
-                            NMC.ctx.lineWidth = (lw / 2) + 2;
+                            NMC.ctx.lineWidth = ((lw / 2) + 2)*NMC.plot.thick;
                             NMC.ctx.strokeStyle = dat[r].fill ? (dat[r].fill == 1 ? '#A0A0A0' : dat[r].fill) : '#A0A0A0';
                             NMC.ctx.moveTo((v ? pts[1] : pts[0]) + (extr ? NMC.bw / 2 : 0) + ox1, NomanicGraph.frm((v ? pts[0] : pts[1]), gh, NMC.plot.scalary, oy1));
                             for (i = 2; i < pts.length; i += 2) {
@@ -1934,7 +1934,7 @@ var NomanicGraph = {
                             NMC.ctx.closePath();
                         }
                         NMC.ctx.beginPath();
-                        NMC.ctx.lineWidth = (lw / 2);
+                        NMC.ctx.lineWidth = (lw / 2)*NMC.plot.thick;
                         NMC.ctx.strokeStyle = fill;
                         NMC.ctx.moveTo((v ? pts[1] : pts[0]) + (extr ? NMC.bw / 2 : 0) + ox1, NomanicGraph.frm((v ? pts[0] : pts[1]), gh, NMC.plot.scalary, oy1));
                         for (i = 2; i < pts.length; i += 2) {
@@ -2010,7 +2010,7 @@ var NomanicGraph = {
             tp = NomanicGraph.frm(0, gh, NMC.plot.scaley, oy1);
         if (v) {
             o.style.top = (tp + gh + 5) + 'px';
-            o.style.left = (ox1 - o.offsetWidth - 5) + 'px';
+            o.style.left = NMC.objects.grapha.offsetLeft + 'px';
             o.style.width = gw + 'px';
         } else {
             o.style.top = (NMC.objects.graph.offsetTop + NMC.objects.grapha.offsetTop) + 'px';
@@ -2287,7 +2287,7 @@ var NomanicGraph = {
         for (f = 0; f < sp + 1; f++) {
             pr = 100 - (((cnt - ymin) / (ymax - ymin)) * 100);
             if ((pr <= 100) && (pr >= 0)) {
-                ln += '<span class="blk ' + (v ? 'xval h100 tc' : 'yval w100 tr') + '" style="' + (v ? '' : 'transform: translateY(-50%);') + (v ? 'left:' : 'top:') + (v ? 100 - pr : pr) + '%;">' + NomanicObject.abbrNum(cnt) + '&nbsp;</span>';
+                ln += '<span class="blk ' + (v ? 'xval h100' : 'yval w100 tr') + '" style="' + (v ? '' : 'transform: translateY(-50%);') + (v ? 'left:' : 'top:') + (v ? 100 - pr : pr) + '%;">' + NomanicObject.abbrNum(cnt) + '&nbsp;</span>';
             }
             cnt += (v ? tick : -tick);
         }
@@ -2412,9 +2412,10 @@ var NomanicGraph = {
     rcnv: function(NMC, rc) {
         var wc, cn = NMC.objects.canvas.style,
             pn = NMC.objects.panel,
+            g=NMC.objects.graph.style,
             gw = NMC.objects.graph.offsetWidth,
             gh = NMC.objects.graph.offsetHeight;
-        NMC.wbw = (NMC.layout.vertical ? (gh * NMC.plot.scalary) : (gw * NMC.plot.scalarx)) / NMC.barspp;
+        NMC.wbw = (NMC.layout.vertical ? (((NMC.layout.vertical&&(NMC.layout.showaxis))?(NomanicObject.ob('b2'+NMC.pid).offsetTop-NMC.objects.grapha.offsetTop):gh) * NMC.plot.scalary) : (gw * NMC.plot.scalarx)) / NMC.barspp;
         if (NMC.fixg) {
             NMC.height = gh;
             NMC.width = gw;
@@ -2424,7 +2425,6 @@ var NomanicGraph = {
             pn.setAttribute('width', gw);
         } else if (NMC.layout.vertical) {
             wc = NMC.wbw * NMC.maxl;
-            wc = wc > gh ? wc : gh;
             cn.height = wc + 'px';
             cn.width = gw + 'px';
             pn.setAttribute('height', wc);
@@ -3179,6 +3179,7 @@ var NomanicGraph = {
         options.plot.scalary = 1;
         options.plot.scalex = 1;
         options.plot.scaley = 1;
+        options.plot.thick = 1;
         for (f = 0; f < c.length; f++) {
             k = c[f].split('|');
             k[1] = k[1] ? k[1] : 1;
@@ -3347,6 +3348,9 @@ var NomanicGraph = {
                 case 'gridlines':
                     options.plot.gridlines = parseFloat(k[1]);
                     break;
+                case 'thick':
+                    options.plot.thick = parseFloat(k[1]);
+                    break;
                 case 'color':
                     options.plot.color = k[1];
                     break;
@@ -3354,6 +3358,7 @@ var NomanicGraph = {
                     k = NomanicObject.stripc(NomanicObject.stripq(k[1]));
                     options.plot.seperate = parseInt(k[0]);
                     options.plot.seperatex = k[1] ? parseInt(k[1]) : false;
+                    options.plot.seperates = k[2] ? parseFloat(k[2]) : false;
                     break;
                 case 'opacityspread':
                     options.plot.opacityspread = 1;
